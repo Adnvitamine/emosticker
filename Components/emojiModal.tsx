@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     closeModal: {
         flex: 1.3,
-        backgroundColor: "grey",
+        backgroundColor: "white",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
         flex: 6,
         flexDirection: "row",
         width: "100%",
-        borderWidth: 1,
+        borderTopWidth: 1,
+        borderColor: 'rgba(0,0,0,0.1)',
         flexWrap: "wrap",
     },
     closeIcon: {
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
         height: 20,
         position: 'absolute',
         right: 12,
-        top: 5,
+        top: 8,
         alignItems: 'center',
         justifyContent: 'center',
     }

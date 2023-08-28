@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import { ReactNode } from 'react'
 
 type imageProps = {
@@ -15,9 +15,11 @@ const ImageViewer = (props: imageProps) =>{
 
     return(<View>
         
-        <Image source={{uri: `${imageSource}`}} style={styles.image} ></Image>
+        
+        <ImageBackground source={{uri: `${imageSource}`}} style={styles.image} >
+            
         {props.children}
-    
+        </ImageBackground>
     </View>
         )
 
@@ -27,6 +29,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
+        borderWidth: 1,
     
     }   
 })

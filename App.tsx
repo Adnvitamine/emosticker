@@ -1,4 +1,5 @@
-import { ImageBackground, StyleSheet, Text, View, Pressable } from 'react-native';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import { ImageBackground, StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import Header from './Components/header';
 import Button from './Components/button';
 import * as ImagePicker from 'expo-image-picker';
@@ -9,16 +10,32 @@ import AddButton from './Components/addButton';
 import SaveButton from './Components/saveButton';
 import EmojiModal from './Components/emojiModal';
 import EmojiSticker from './Components/emojiSticker';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 
+const logoSource = require('./assets/images/adaptive-icon.png'); 
 
 export default function App() {
-  
+
   const [selectPic, setSelectPic] = useState("");
   const [selectEmo, setSelectEmo] = useState("");
   const [isVisible, setVisible] = useState(false);
   const placeHolderImage = 'https://images.unsplash.com/photo-1620055374842-145f66ec4652?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80';
   const listEmo = "😀";
-  const emoArray = ["😍","🤩","😎","🤪","👻","😹","👍🏼","🐶","🐰","🚀"]
+  const emoArray = ["😍","🤩","😎","🤪","👻","😹","👍🏼","🐶","🐰","🚀"];
+
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_900Black,
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -47,8 +64,8 @@ export default function App() {
     setVisible(false)
   }
 
-  return (
-    <View style={styles.container}>
+  return (<SafeAreaProvider>
+    <GestureHandlerRootView style={styles.container}>
       <ImageBackground source={{uri: 'https://images.unsplash.com/photo-1620055374842-145f66ec4652?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}} style={styles.img} >
 
       <View style={styles.top}>
@@ -56,7 +73,9 @@ export default function App() {
       
       <View style={styles.screen}>
         <View style={styles.header}>
-          <Header></Header>
+          <Header>
+            <Image source={logoSource} style={styles.logo} ></Image>
+          </Header>
         </View>
         <View style={styles.body}>
           <ImageViewer placeHolderImage={placeHolderImage} selectPic={selectPic}>
@@ -87,7 +106,8 @@ export default function App() {
       </View>
       
       </ImageBackground>
-    </View>
+    </GestureHandlerRootView>
+  </SafeAreaProvider>
   );
 }
 
@@ -104,6 +124,7 @@ const styles = StyleSheet.create({
  },
  top: {
   flex: 1,
+  fontFamily: 'Inter_900Black',
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
@@ -113,8 +134,15 @@ const styles = StyleSheet.create({
   flex: 16,
  },
  header: {
-  flex: 1.5,
-  backgroundColor: "rgba(0,0,0,0.1)",
+  flex: 0.8,
+  backgroundColor: "rgba(225,225,225,1)",
+ },
+ logo:{
+  position: "absolute",
+  left: 0,
+  bottom: 10,
+  width: 64,
+  height: 64
  },
  body: {
   flex: 12,
@@ -122,7 +150,7 @@ const styles = StyleSheet.create({
  footer:{
   flex: 3,
   flexDirection: "row",
-  backgroundColor: "rgba(0,0,0,1)",
+  backgroundColor: "rgba(255,255,255,1)",
   alignItems: 'center',
   justifyContent: 'center',
  },
