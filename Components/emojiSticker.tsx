@@ -6,7 +6,7 @@ import Animated, {
     useAnimatedGestureHandler,
     withSpring,
   } from 'react-native-reanimated';
-import { useState, useRef, useCallback, Context, ContextType} from "react";
+import {useRef, useCallback} from "react";
 
 
 type stickerProps = {

@@ -1,9 +1,9 @@
+import { useState , useRef  } from 'react';
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import { ImageBackground, StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import Header from './Components/header';
 import Button from './Components/button';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
 import ImageViewer from './Components/imageViewer';
 import CancelButton from './Components/cancelButton';
 import AddButton from './Components/addButton';
@@ -12,16 +12,23 @@ import EmojiModal from './Components/emojiModal';
 import EmojiSticker from './Components/emojiSticker';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
-  Gesture,
-  GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 
 const logoSource = require('./assets/images/adaptive-icon.png'); 
 
-export default function App() {
 
+export default function App() {
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  const imageRef = useRef(null);
+
+  if (status === null) {
+    requestPermission();
+  }
   const [selectPic, setSelectPic] = useState("");
+  const [showAppOptions, setShowAppOptions] = useState(false);
   const [selectEmo, setSelectEmo] = useState("");
   const [isVisible, setVisible] = useState(false);
   const placeHolderImage = 'https://images.unsplash.com/photo-1620055374842-145f66ec4652?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80';
@@ -44,6 +51,7 @@ export default function App() {
 
     if (!result.canceled) {
       setSelectPic(result.assets[0].uri);
+      setShowAppOptions(true);
     } else {
       alert('You did not select any image.');
     }
@@ -64,6 +72,23 @@ export default function App() {
     setVisible(false)
   }
 
+  const onSaveImageAsync= async () => {
+    try {
+      const localUri = await captureRef(imageRef, {
+        height: 440,
+        quality: 1,
+      });
+
+      await MediaLibrary.saveToLibraryAsync(localUri);
+      if (localUri) {
+        alert("Saved!");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
   return (<SafeAreaProvider>
     <GestureHandlerRootView style={styles.container}>
       <ImageBackground source={{uri: 'https://images.unsplash.com/photo-1620055374842-145f66ec4652?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'}} style={styles.img} >
@@ -77,10 +102,12 @@ export default function App() {
             <Image source={logoSource} style={styles.logo} ></Image>
           </Header>
         </View>
-        <View style={styles.body}>
+        <View style={styles.body} >
+          <View ref={imageRef} collapsable={false}>
           <ImageViewer placeHolderImage={placeHolderImage} selectPic={selectPic}>
           <EmojiSticker sticker={selectEmo}></EmojiSticker>
           </ImageViewer>
+          </View>
         </View>
         <View style={styles.footer}>
           <View style={styles.footerLeft}>
@@ -89,7 +116,7 @@ export default function App() {
             {selectPic === "" ? <Button onPress={pickImageAsync}></Button>: <AddButton onPress={modalVisible} ></AddButton>}
           </View>
           <View style={styles.footerRight}>
-          {selectPic === "" ? "" : <SaveButton></SaveButton>}
+          {selectPic === "" ? "" : <SaveButton onPress={onSaveImageAsync} ></SaveButton>}
           </View>
           {isVisible ? <EmojiModal isVisible={isVisible} onClose={modalHide} emoArray={emoArray}>
           {   

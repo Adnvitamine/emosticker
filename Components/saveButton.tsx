@@ -1,13 +1,19 @@
 import { View, Pressable, StyleSheet } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 
-const SaveButton = () =>{
+type saveProps = {
+    
+    onPress?: ()=>void,
+}
+
+
+const SaveButton = (props: saveProps) =>{
 
 
     
     return(
         <View  >
-            <Pressable style={styles.save} >
+            <Pressable style={styles.save} onPress={props.onPress}>
             <MaterialIcons name="save-alt" size={40} style={styles.saveIcon} />
             </Pressable>
         </View>
