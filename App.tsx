@@ -1,5 +1,4 @@
 import { useState , useRef  } from 'react';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import { ImageBackground, StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import Header from './Components/header';
 import Button from './Components/button';
@@ -35,13 +34,6 @@ export default function App() {
   const listEmo = "😀";
   const emoArray = ["😍","🤩","😎","🤪","👻","😹","👍🏼","🐶","🐰","🚀"];
 
-  const [fontsLoaded, fontError] = useFonts({
-    Inter_900Black,
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -151,7 +143,6 @@ const styles = StyleSheet.create({
  },
  top: {
   flex: 1,
-  fontFamily: 'Inter_900Black',
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
